@@ -1,4 +1,4 @@
-# Contributions to Movie Magic project
+# Contributions to Movie Machine project
 
 [Group github repo](https://github.com/KanikaBhambi/Movie_Recommender)  
 [Data Source](https://www.kaggle.com/rounakbanik/the-movies-dataset#movies_metadata.csv)
