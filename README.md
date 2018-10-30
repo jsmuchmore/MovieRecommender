@@ -19,12 +19,27 @@ After these colorfulness and darkness values are in lists, the poster path value
 
 -- __Date Extraction__ --
 
-The dates in our data were given as a single string in the format "YYYY-MM-DD". We thought it would be more useful to separate this into individual Year, Month and Day values. 
+The dates in our data were given as strings in the format "YYYY-MM-DD". We thought it would be more useful to separate this into individual Year, Month and Day values. 
 
 This was accomplished by looping through the dates and splitting the string at "-" then appending each Year, Month, Day to appropriate lists. An exception was needed to append nan as a placeholder for missing dates. After checking that everything is the correct length and in the appropriate lists, the release_date column in our dataframe was replaced with release_year, release_month and release_day and saved for later use. 
 
 ### Movie Classifier
 
+The content-based recommendation system relies completely on classifying movies based on the features available to us. The actual recommendation script as well as the web application needed certain data along with this movie classification. 
+
+The first task in classifying the movies was to finalize which features we were going to feed into our calssification algorithm. We looked at our entire dataset and began dropping certain features that were non-numeric or otherwise unhelpful with classification. Next, we implemented StandardScaler() from sklearn to prep for feeding into classification models. 
+
+We decided to use Kmeans as our clustering algorithm. We wanted to analyze how models with different number of clusters behaved so we trained and saved 30 models with varrying K values to compare. We created a plot that showed the average distance from cluster center against the number of clusters for each model to look for a sharp "elbow" which would indicate a good K value to use for our final classificaiton. After much testing and trials later we decided to go with number of clusters as 20. At first, almost all of the movies were classified into a single group. Eventually, after much tweaking, feature dropping, changing cluster numbers, we were finally able to get a reasonable distribution of movies into classifications. 
+
+The final python script needed to return a list of movies with certain information. So a "lookup.csv" was created to save only the information needed for the recommender. 
+
 ### Content-based Rcommender
+
+Most simply, the content-based recommendation works as follows:  
+
+Viewer likes movie A which is has the same classificaiton as movie B. Therefore, we recommend movie B to the viewer.
+
+This is a lot more involved, taking into consideration personalized ratings and sorting thousands of movies to return the best movies not seen. To accomplish this I wrote a python script that takes in a simple "input_df" that only has the movieID and the user rating. Movies of the same classification have their viewer rating averaged and a "working_df" is generated to show the users rating for each classification. We then mulitiply the users rating by the top movies not seen in the classification to generate a personalized rating list for individual movies. This is sorted by highest "personalized ratings". Additionally we wanted to make sure that if a user rates movies of a certain language, those languages are weighted higher. So in the final output we assigned a weight of 1 to languages rated and 0.9 to all other languages and multiplied that by the personalized rating. Finally this list of movies which is now sorted by the highest personalized rating is returned to be mixed with the collaborative filtering recommendation system to generate a hybrid model that returns recommendations to the screen. 
+
 
 
